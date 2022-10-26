@@ -8,6 +8,7 @@ on:
 jobs:
   taas_approval:
     # runs-on: [ "self-hosted", "datalake-nonprod-maven11-runner" ]
+    runs-on: "ubuntu-latest"
     if: |
       github.event.issue.pull_request
        && github.event.issue.state == 'open'
