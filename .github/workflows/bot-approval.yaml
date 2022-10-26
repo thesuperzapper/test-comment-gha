@@ -28,14 +28,14 @@ jobs:
           retries: 3
           script: |
             const request = {
-              pull_number: context.issue.number,
               owner: context.repo.owner,
-              repo: context.repo.repo
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
             }
             
             core.info(`Attempting to get PR #${request.pull_number} from ${request.owner}/${request.repo}...`)
             try {
-              const result = await github.pulls.get(request)
+              const result = await github.rest.pulls.get(request)
               return result.data
             } catch (err) {
               core.setFailed(`Request failed with error ${err}`)
@@ -64,16 +64,16 @@ jobs:
           retries: 3
           script: |
             const request = {
-              issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
+              issue_number: context.issue.number,
               body: [
                 '@${{ github.event.comment.user.login }}, this PR is not eligible for bot-approval.',
                 '', 
                 'To be eligible, the PR must only modify files matching:',
                 ' - `/datalake-nonprod-1/*/taas/source.properties`',
                 ' - `/datalake-prod-1/*/taas/source.properties`'
-              ].join('\n')
+              ].join('\n'),
             }
             
             core.info(`Attempting to post comment on PR #${request.issue_number} from ${request.owner}/${request.repo}...`)
