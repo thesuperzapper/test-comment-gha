@@ -57,7 +57,7 @@ jobs:
           pull-request-number: ${{ github.event.issue.number }}
 
       - name: Post Rejection Comment
-        if: ! (steps.changed-files.outputs.only_modified == 'true')
+        if: steps.changed-files.outputs.only_modified != 'true'
         uses: actions/github-script@v6
         with:
           retries: 3
