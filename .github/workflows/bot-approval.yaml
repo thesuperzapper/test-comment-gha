@@ -15,12 +15,6 @@ jobs:
        && contains(fromJson('["thesuperzapper", "xxxxxx"]'), github.event.comment.user.login)
        && contains(github.event.comment.body, '/taas-approval')
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-#          ref: refs/pull/${{ github.event.issue.number }}/merge
-
       - name: Get PR Details
         uses: actions/github-script@v6
         id: get-pr
@@ -60,6 +54,13 @@ jobs:
             } catch (err) {
               core.setFailed(`Request failed with error ${err}`)
             }
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ fromJSON(steps.get-pr.outputs.result).merge_commit_sha }}
+#          ref: refs/pull/${{ github.event.issue.number }}/merge
 
       - name: Check which files changed
         uses: tj-actions/changed-files@v34
