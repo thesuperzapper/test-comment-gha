@@ -60,7 +60,6 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ fromJSON(steps.get-pr.outputs.result).merge_commit_sha }}
-#          ref: refs/pull/${{ github.event.issue.number }}/merge
 
       - name: Check which files changed
         uses: tj-actions/changed-files@v34
