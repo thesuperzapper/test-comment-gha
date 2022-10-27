@@ -43,7 +43,7 @@ jobs:
 
       - name: Post Rejection Comment (not in mergeable state)
         uses: actions/github-script@v6
-        if: fromJSON(steps.get-pr.outputs.result).mergeable != 'true'
+        if: fromJSON(steps.get-pr.outputs.result).mergeable == false
         with:
           retries: 3
           script: |
@@ -64,7 +64,7 @@ jobs:
       - name: Check which files changed
         uses: tj-actions/changed-files@v34
         id: changed-files
-        if: fromJSON(steps.get-pr.outputs.result).mergeable == 'true'
+        if: fromJSON(steps.get-pr.outputs.result).mergeable == true
         with:
           sha: ${{ fromJSON(steps.get-pr.outputs.result).merge_commit_sha }}
           base_sha: ${{ fromJSON(steps.get-pr.outputs.result).base.sha }}
@@ -75,7 +75,7 @@ jobs:
       - name: Post Rejection Comment (wrong files changed)
         uses: actions/github-script@v6
         if: |
-          fromJSON(steps.get-pr.outputs.result).mergeable == 'true'
+          fromJSON(steps.get-pr.outputs.result).mergeable == true
            && steps.changed-files.outputs.only_modified != 'true'
         with:
           retries: 3
@@ -103,7 +103,7 @@ jobs:
       - name: Approve PR
         uses: actions/github-script@v6
         if: |
-          fromJSON(steps.get-pr.outputs.result).mergeable == 'true'
+          fromJSON(steps.get-pr.outputs.result).mergeable == true
            && steps.changed-files.outputs.only_modified == 'true'
         with:
           retries: 3
